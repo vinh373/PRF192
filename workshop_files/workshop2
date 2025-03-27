@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() 
+{
+    int num_employees;
+    float total_salary_cost = 0;
+    int count_25 = 0, count_15 = 0, count_10 = 0;
+    
+    // Nhập số lượng nhân viên
+    printf("Enter the number of employees: ");
+    scanf("%d", &num_employees);
+    
+    // Kiểm tra số lượng nhân viên hợp lệ
+    if (num_employees < 1) 
+	{
+        printf("Invalid input: Number of employees must be >= 1\n");
+        exit(EXIT_FAILURE);  
+	// Thoát chương trình nếu đầu vào không hợp lệ
+    }
+    for (int i = 0; i <num_employees; i++)
+    {
+	}
+	int b;
+	float allowance, tax, income, net;
+	for (int i = 0; i < num_employees; i++)
+	{
+		printf("\nProcessing employee %d:\n", i + 1);
+		printf("Enter the basic salary (>= 0): ");
+		scanf("%d", &b);
+		while (b < 0)
+		{
+			printf("Invalid salary. Please enter a non-negative value.\n");
+		    printf("Enter the basic salary (>= 0): ");
+		    scanf("%d", &b);						
+		}
+		printf("basic Salary: %.2f\n", (float)b);
+		if (b < 6000000)
+		{
+			allowance = b*0.25;
+			count_25 += 1;
+		}
+		else if (6000000 <= b && b <= 15000000)
+		{
+			allowance = b*0.15;
+			count_15 += 1;
+		}
+		else
+		{
+			allowance = b*0.1;
+			count_10 += 1;
+		}
+		printf("allowance: %.2f\n", allowance);
+		income = allowance + b;
+		if (income <= 8000000)
+		{
+			tax = 0;
+			printf("Tax deducton: %.2f\n", tax);
+		}
+		else
+		{
+			tax = (b + allowance - 8000000)*0.1;
+			printf("Tax deducton: %.2f\n", tax);
+		}
+		net = allowance + b - tax;
+		printf("Net income: %.2f\n", net);
+		total_salary_cost += net;
+	}
+	printf("\n=== Salary Statistics ===\n");
+	printf("Total Salary cost of the company: %.2f\n", total_salary_cost);
+	printf("Numberof employees with allowance of 25%: %d\n", count_25);
+	printf("Numberof employees with allowance of 15%: %d\n", count_15);
+	printf("Numberof employees with allowance of 10%: %d\n", count_10);
+}
