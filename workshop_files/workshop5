@@ -1,0 +1,118 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_SIZE 100
+
+// Function prototypes
+int readFileToArray(const char *filename, int arr[], int *size);
+void displayArray(int arr[], int size);
+void calculateStatistics(int arrr[], int size, int *sum, float *average, int *max, int *min);
+void writeResultsToFile(const char *filename, int sum, float average, int max, int min);
+
+int main()
+{
+    int arr[MAX_SIZE], size = 0;
+    int sum, max, min;
+    float average;
+
+    // Gọi hàm đọc file
+    if (readFileToArray("data.txt", arr, &size) == 1) {
+        return 1; // Thoát nếu lỗi
+    }
+
+    // Kiểm tra nếu không có dữ liệu
+    if (size == 0) {
+        printf("No data read from file.\n");
+        return 1;
+    }
+
+    // Gọi hàm hiển thị mảng
+    displayArray(arr, size);
+
+    
+    // Gọi hàm tính toán
+    calculateStatistics(arr, size, &sum, &average, &max, &min);
+        
+	// Hiển thị kết quả
+    printf("Statistics:\n");
+    printf("Sum: %d\n", sum);
+    printf("Average: %.2f\n", average);
+    printf("Max: %d\n", max);
+    printf("Min: %d\n", min);
+    
+    // Gọi hàm lưu file
+    writeResultsToFile("results", sum, average, max, min);
+    
+    system("pause");
+    return 0;
+}
+
+int readFileToArray(const char *filename, int arr[], int *size)
+{
+    FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        perror("Error opening file"); // Hiển thị lỗi cụ thể hơn
+        return 1;
+    }
+
+    *size = 0;
+    while (fscanf(file, "%d", &arr[*size]) == 1) 
+    {
+        (*size)++;
+        if (*size >= MAX_SIZE) break; // Tránh tràn mảng
+    }
+
+    fclose(file);
+
+    if (*size == 0) 
+    {
+        printf("Warning: No data read from file.\n");
+    }
+    return 0;
+}
+
+void displayArray(int arr[], int size) 
+{
+    printf("Data in the array: \n");
+    for (int i = 0; i < size; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+void calculateStatistics(int arr[], int size, int *sum, float *average, int *max, int *min)
+{
+	if(size <= 0) return;
+	
+	*sum = 0;
+	*max = arr[0];
+	*min = arr[0];
+	
+	for(int i = 0; i < size; i++)
+	{
+		*sum += arr[i];
+		if(arr[i] > *max) *max = arr[i];
+		if(arr[i] < *min) *min = arr[i];
+	}
+	*average = (float)(*sum) / size;
+}
+
+void writeResultsToFile(const char *filename, int sum, float average, int max, int min)
+{
+    FILE *file = fopen(filename, "w");
+    if (file == NULL)
+    {
+        perror("Error opening file"); // Hiển thị lỗi cụ thể hơn
+        return;
+    }
+    
+    // Ghi kết quả vào file
+    fprintf(file, "Sum: %d\n", sum);
+    fprintf(file, "Average: %.2f\n", average);
+    fprintf(file, "Max: %d\n", max);
+    fprintf(file, "Min: %d\n", min);
+
+    fclose(file);
+    printf("Results have been saved to %s\n", filename);
+}
