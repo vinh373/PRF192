@@ -1,0 +1,163 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Constants
+#define MAX_DAYS 100
+
+// Struct definition
+typedef struct 
+{
+    int sales[MAX_DAYS];
+    int days[MAX_DAYS];
+    int count;
+} SalesData;
+
+// Function prototypes
+SalesData inputSales();
+void displaySales(SalesData data);
+SalesData sortAscending(SalesData data);
+SalesData sortDescending(SalesData data);
+void searchGreaterThan(SalesData data, int target);
+
+int main() 
+{
+    SalesData data;
+    int choice, target;
+
+    do 
+	{
+        printf("\n=== Enhanced Sales Data Management Menu ===\n");
+        printf("1. Input Sales Data\n");
+        printf("2. Display Sales Data\n");
+        printf("3. Sort Sales Data in Ascending Order\n");
+        printf("4. Sort Sales Data in Descending Order\n");
+        printf("5. Search for Sales Greater Than a Target\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) 
+		{
+            case 1:
+                data = inputSales();
+                break;
+            case 2:
+                displaySales(data);
+                break;
+            case 3:
+                data = sortAscending(data);
+                printf("Sales data sorted in ascending order:\n");
+                displaySales(data);
+                break;
+            case 4:
+                data = sortDescending(data);
+                printf("Sales data sorted in descending order:\n");
+                displaySales(data);
+                break;
+            case 5:
+                printf("Enter the target sales value: ");
+                scanf("%d", &target);
+                searchGreaterThan(data, target);
+                break;
+            case 6:
+                printf("Exiting program.\n");
+                break;
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    } 
+while (choice != 6);
+system("pause");
+return 0;
+}
+
+SalesData inputSales()
+{
+	SalesData data;
+	printf("Enter the number of days (1-100): ");
+	scanf("%d", &data.count);
+
+	while(data.count < 1 || data.count > 100)
+	{
+		printf("Invalid number of days! Please try again.\n");
+		printf("Enter the number of days (1-100): ");
+		scanf("%d", &data.count);
+	}
+	for(int i = 0; i < data.count; i++)
+	{
+    	printf("Day %d (Sales Value): ", i + 1);
+	    scanf("%d", &data.sales[i]);
+	    data.days[i] = i + 1;
+	}
+	return data;
+}
+
+void displaySales(SalesData data)
+{
+	printf("\nSales data:\n");
+	for(int i = 0; i < data.count; i++)
+	{
+		printf("Day %d: %d\n", data.days[i], data.sales[i]);
+	}
+}
+
+SalesData sortAscending(SalesData data)
+{
+    for (int i = 0; i < data.count - 1; i++) 
+    {
+        for (int j = i + 1; j < data.count; j++) 
+        {
+            // So sánh giá trị sales
+            if (data.sales[i] > data.sales[j]) 
+            {
+                // Hoán đổi sales
+                int tempSales = data.sales[i];
+                data.sales[i] = data.sales[j];
+                data.sales[j] = tempSales;
+
+                // Hoán đổi days để giữ nguyên ngày tương ứng
+                int tempDay = data.days[i];
+                data.days[i] = data.days[j];
+                data.days[j] = tempDay;
+            }
+        }
+    }
+    return data;
+}
+
+SalesData sortDescending(SalesData data)
+{
+	for(int i = 0; i < data.count - 1; i++)
+	{
+		for(int j = i + 1; j < data.count; j++)
+        {
+            // So sánh giá trị sales
+            if (data.sales[i] < data.sales[j]) 
+		   {
+                // Hoán đổi sales
+                int tempSales = data.sales[i];
+                data.sales[i] = data.sales[j];
+                data.sales[j] = tempSales;
+
+                // Hoán đổi days để giữ nguyên ngày tương ứng
+                int tempDay = data.days[i];
+                data.days[i] = data.days[j];
+                data.days[j] = tempDay;
+            }
+        }
+    }
+    return data;
+}
+
+void searchGreaterThan(SalesData data, int target)
+{
+    printf("Sales values greater than %d:\n", target);
+	for (int i = 0; i < data.count; i++)
+	{
+		if(data.sales[i] > target)
+		{
+    		printf("Day %d: %d\n", data.days[i], data.sales[i]);
+		}
+	}
+}
+
